@@ -5,3 +5,5 @@ declare namespace jest {
     toCompileAndBeEqualTo(expected): R;
   }
 }
+
+// teste
