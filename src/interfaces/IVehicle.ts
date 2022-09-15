@@ -10,8 +10,8 @@ const vehicleZodSchema = z.object({
     required_error: 'Year is required',
     invalid_type_error: 'Year must be a number',
   }).int().positive().gte(1900)
-    .lte(2022),
-  // .min(4, { message: 'Year must have 4 numbers' }),
+    .lte(2022)
+    .min(4, { message: 'Year must have 4 numbers' }),
 
   color: z.string({
     required_error: 'Color is required',
@@ -27,6 +27,6 @@ const vehicleZodSchema = z.object({
 
 });
 
-type Ivehicle = z.infer <typeof vehicleZodSchema>;
+type IVehicle = z.infer <typeof vehicleZodSchema>;
 
-export { Ivehicle, vehicleZodSchema };
+export { IVehicle, vehicleZodSchema };
