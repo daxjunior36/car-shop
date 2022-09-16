@@ -1,8 +1,8 @@
 import { isValidObjectId } from 'mongoose';
-import IService from '../interfaces/IService';
-import { ICar, carZodSchema } from '../interfaces/ICar';
 import { vehicleZodSchema } from '../interfaces/IVehicle';
+import { ICar, carZodSchema } from '../interfaces/ICar';
 import { IModel } from '../interfaces/IModel';
+import IService from '../interfaces/IService';
 
 export default class CarService implements IService <ICar> {
   private _car: IModel <ICar>;
@@ -10,22 +10,23 @@ export default class CarService implements IService <ICar> {
     this._car = model;
   }
 
-  async create(obj: any): Promise <ICar> {
-    const car = { doorsQty: obj.doorsQty, seatQty: obj.seatQty };
+  async create(obj: unknown): Promise <ICar> {
+    const objCar = obj as ICar;
+    const car = { doorsQty: objCar.doorsQty, seatsQty: objCar.seatsQty };
     const testCar = carZodSchema.safeParse(car);
     if (!testCar.success) throw testCar.error;
 
     const vehicle = {
-      model: obj.model,
-      year: obj.year,
-      color: obj.color,
-      buyValue: obj.buyValue,
-      status: obj.status,
+      model: objCar.model,
+      year: objCar.year,
+      color: objCar.color,
+      buyValue: objCar.buyValue,
+      status: objCar.status,
     };
     const testVehicle = vehicleZodSchema.safeParse(vehicle);
     if (!testVehicle.success) throw testVehicle.error;
 
-    return this._car.create(obj);
+    return this._car.create(objCar);
   }
 
   public async read(): Promise <ICar[]> {
@@ -35,14 +36,14 @@ export default class CarService implements IService <ICar> {
 
   async readOne(_id: string): Promise <ICar> {
     const car = await this._car.readOne(_id);
-    if (!car) throw new Error('Id do carro no service não localizado');
+    if (!car) throw new Error('Id do service não localizado');
     return car;
   }
 
   async delete(_id: string): Promise <ICar> {
     if (!isValidObjectId(_id)) { throw new Error('Id invalido no service delete'); }
     const car = await this._car.delete(_id);
-    if (!car) throw new Error('Id no service não localizado');
+    if (!car) throw new Error('Id do service não localizado');
     return car;
   }
 
