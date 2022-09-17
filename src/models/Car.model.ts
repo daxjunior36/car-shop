@@ -13,6 +13,9 @@ const carMongooseShema = new Schema<ICar>({
 });
 
 class CarModel extends MongoModel<ICar> {
+  // static read() {
+  //   throw new Error('Method not implemented.');
+  // }
   constructor(model = mongooseCreateModel('Car', carMongooseShema)) {
     super(model);
   }

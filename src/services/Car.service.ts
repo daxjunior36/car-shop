@@ -3,6 +3,7 @@ import { vehicleZodSchema } from '../interfaces/IVehicle';
 import { ICar, carZodSchema } from '../interfaces/ICar';
 import { IModel } from '../interfaces/IModel';
 import IService from '../interfaces/IService';
+import { ErrorTypes } from '../errors/catalog';
 
 export default class CarService implements IService <ICar> {
   private _car: IModel <ICar>;
@@ -36,7 +37,7 @@ export default class CarService implements IService <ICar> {
 
   async readOne(_id: string): Promise <ICar> {
     const car = await this._car.readOne(_id);
-    if (!car) throw new Error('Id do service não localizado');
+    if (!car) throw new Error(ErrorTypes.EntityNotFound);
     return car;
   }
 

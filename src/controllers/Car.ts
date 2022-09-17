@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+// import { string } from 'zod';
 import IService from '../interfaces/IService';
 import { ICar } from '../interfaces/ICar';
 
@@ -29,6 +30,10 @@ export default class CarController {
 
   async read(req: Request, res: Response <ICar[]>) {
     const results = await this._service.read();
+    return res.status(200).json(results);
+  }
+  async readOne(req: Request, res: Response <ICar>) {
+    const results = await this._service.readOne(req.params.id);
     return res.status(200).json(results);
   }
 }

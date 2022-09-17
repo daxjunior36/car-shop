@@ -16,6 +16,7 @@ export const carZodSchema = z.object({
 type Car = z.infer<typeof carZodSchema>;
 
 export interface ICar extends IVehicle {
+  [x: string]: any;
   doorsQty: Car['doorsQty'],
   seatsQty: Car['seatsQty'],
 }

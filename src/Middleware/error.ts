@@ -1,17 +1,27 @@
-import { NextFunction, Request, Response } from 'express';
+import { ErrorRequestHandler } from 'express';
 import { ZodError } from 'zod';
+import { ErrorTypes, errorCatalog } from '../errors/catalog';
 
-function middlewareError(
-  err:Error | ZodError,
-  req: Request,
-  res:Response,
-  _next:NextFunction,
-
-) {
-  if (err instanceof ZodError) {
+const errorHandler: ErrorRequestHandler = ( 
+  err: Error | ZodError, 
+  _req,
+  res,
+  _next,
+) => {
+  if (err instanceof ZodError) { 
     return res.status(400).json({ message: err.issues });
   }
-  return res.status(500).json({ message: err.message });
-}
+ 
+  const messageAsErrorType = err.message as ErrorTypes;
+  const mappedError = errorCatalog[messageAsErrorType];
 
-export default middlewareError;
+  if (mappedError) {
+    const { httpStatus, error } = mappedError;
+
+    return res.status(httpStatus).json({ error });
+  }
+
+  return res.status(500).json({ message: 'internal' });
+};
+
+export default errorHandler;
