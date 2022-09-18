@@ -11,14 +11,10 @@ const carMongooseShema = new Schema<ICar>({
   doorsQty: Number,
   seatsQty: Number,
 });
+// }, { versionkey: false });
 
-class CarModel extends MongoModel<ICar> {
-  // static read() {
-  //   throw new Error('Method not implemented.');
-  // }
+export default class Car extends MongoModel<ICar> {
   constructor(model = mongooseCreateModel('Car', carMongooseShema)) {
     super(model);
   }
 }
-
-export default CarModel;

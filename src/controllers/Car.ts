@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-// import { string } from 'zod';
 import IService from '../interfaces/IService';
 import { ICar } from '../interfaces/ICar';
 
@@ -35,5 +34,13 @@ export default class CarController {
   async readOne(req: Request, res: Response <ICar>) {
     const results = await this._service.readOne(req.params.id);
     return res.status(200).json(results);
+  }
+  async update(req: Request, res: Response <ICar | null>) {
+    const results = await this._service.update(req.params.id, req.body);
+    return res.status(200).json(results);
+  }
+  async delete(req: Request, res: Response <ICar>) {
+    await this._service.delete(req.params.id);
+    return res.status(204).end();
   }
 }

@@ -24,6 +24,7 @@ export default class CarService implements IService <ICar> {
       buyValue: objCar.buyValue,
       status: objCar.status,
     };
+
     const testVehicle = vehicleZodSchema.safeParse(vehicle);
     if (!testVehicle.success) throw testVehicle.error;
 
@@ -42,16 +43,18 @@ export default class CarService implements IService <ICar> {
   }
 
   async delete(_id: string): Promise <ICar> {
-    if (!isValidObjectId(_id)) { throw new Error('Id invalido no service delete'); }
+    if (!isValidObjectId(_id)) { throw new Error(ErrorTypes.InvalidMongoId); }
     const car = await this._car.delete(_id);
-    if (!car) throw new Error('Id do service não localizado');
+    if (!car) throw new Error(ErrorTypes.EntityNotFound);
     return car;
   }
 
-  async update(_id: string, obj: ICar): Promise <ICar | null> {
-    const car = { doorsQty: obj.doorsQty, seatsQty: obj.seatsQty };
-    const testCar = carZodSchema.safeParse(car);
+  async update(_id: string, obj: ICar): Promise<ICar | null> {
+    if (!isValidObjectId(_id)) throw Error(ErrorTypes.InvalidMongoId);
+    const parseCar = { doorsQty: obj.doorsQty, seatsQty: obj.seatsQty };
+    const testCar = carZodSchema.safeParse(parseCar);
     if (!testCar.success) throw testCar.error;
+
     const vehicle = {
       model: obj.model,
       year: obj.year,
@@ -63,7 +66,8 @@ export default class CarService implements IService <ICar> {
     const testVehicle = vehicleZodSchema.safeParse(vehicle);
     if (!testVehicle.success) throw testVehicle.error;
   
-    await this._car.readOne(_id);
+    const car = await this._car.readOne(_id);
+    if (!car) throw new Error(ErrorTypes.EntityNotFound);
     return this._car.update(_id, obj);
   }
 }
