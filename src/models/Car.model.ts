@@ -14,6 +14,9 @@ const carMongooseShema = new Schema<ICar>({
 // }, { versionkey: false });
 
 export default class Car extends MongoModel<ICar> {
+  static read() {
+    throw new Error('Method not implemented.');
+  }
   constructor(model = mongooseCreateModel('Car', carMongooseShema)) {
     super(model);
   }
